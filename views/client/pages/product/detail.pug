@@ -1,0 +1,63 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main 
+  +alert-success()
+  +alert-error()
+
+  div(class='product-detail')
+    div(class='container')
+      form(action=`/carts/add` method='POST')
+        input(type='text' name='product_id' value=product.id class='d-none')
+        input(type='text' name='size' value=product.sizes[sizeIndex].size class='d-none')
+
+        div(class='row-product-detail')
+
+          div(class='col-md-4 left')
+            div(class='product-detail-image')
+              img(src=product.thumbnail alt=product.name)
+
+          div(class='col-md-6 right')
+            div(class='product-detail-content')
+              div(class='product-detail-name') #{product.name}
+
+              div(class='product-detail-price')
+                if product.discount !== 0
+                  span(class='new-price') #{product.newPrice.toLocaleString()}₫
+                  span(class='old-price') #{product.price.toLocaleString()}₫
+                else
+                  span(class='new-price') #{product.price.toLocaleString()}₫
+
+              div(class='product-detail-size-stock row-product-detail justify-content-center')
+                div(class='col-4 mb-2')
+                  div(class='size-current') Kích thước: #{product.sizes[sizeIndex].size}
+                  div(class='size-list')
+                    each object, index in product.sizes 
+                      button(type='button' class=`btn mx-1 ${index == sizeIndex ? 'btn-dark' : 'btn-outline-dark'} choose-size` value=index) #{object.size}
+
+                div(class='col-4 mb-2')
+                  div(class='stock-current' style='padding-left: 20px') Số lượng: #{product.sizes[sizeIndex].stock}
+
+                div(class='col-4 mb-2') 
+                  span Trạng thái: 
+                  if product.sizes[sizeIndex].stock > 0
+                    span(class='badge bg-success') Còn hàng
+                  else 
+                    span(class='badge bg-danger') Hết hàng
+
+              div(class='product-detail-quantity my-3')
+                button(type='button' class='btn btn-outline-secondary btn-sm mx-2 btn-sub') -
+                input(type='number' min=1 max=product.sizes[sizeIndex].stock value=1 style='width: 60px; text-align: center;' readonly class='quantity-product' name='quantity')
+                button(type='button' class='btn btn-outline-secondary btn-sm mx-2 btn-plus') +
+
+              div(class='product-detail-action mt-4')
+                button(type='submit' class='btn btn-pink text-white me-3' style='width: 200px; padding: 10px' )
+                  i(class='fas fa-shopping-cart me-1')
+                  | Thêm vào giỏ hàng
+                button(type='button' class='btn btn-pink text-white me-3' style='width: 100px; padding: 10px' btn-buy-product product_id=product.id product_size=product.sizes[sizeIndex].size) Mua ngay
+        
+        div(class='product-detail-description')
+          h2 Mô tả sản phẩm 
+          p !{product.description}
+  
+  script(src='/js/product.js')

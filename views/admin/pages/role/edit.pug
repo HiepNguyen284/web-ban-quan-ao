@@ -1,0 +1,16 @@
+extend ../../layouts/default.pug
+
+block main 
+  if role.permissions.includes('role_edit')
+    h1.titlePage Chỉnh sửa nhóm quyền
+    form(action=`/admin/roles/edit/${role.id}?_method=PATCH` method='POST' class='row')
+      div(class='mb-3 col-12')
+        label(for='name' class="form-label") Tiêu đề
+        input(type='text' id='name' name='name' class="form-control" value=role.name)
+      div(class='mb-3 col-12')
+        label(for='description' class="form-label") Mô tả
+        input(type='text' id='description' name='description' class="form-control" value=role.description)
+      div(class='mb-3 col-12')
+        button(type='submit' class='btn btn-primary' style='margin: 0') Cập nhật
+  else 
+   h1.titlePage Bạn không có quyền sửa chức vụ

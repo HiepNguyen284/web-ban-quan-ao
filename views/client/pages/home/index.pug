@@ -1,0 +1,28 @@
+extends ../../layouts/default.pug
+include ../../mixins/carousel.pug
+include ../../mixins/grid-product.pug
+include ../../mixins/alert.pug
+
+block main 
+  +carousel()
+  +alert-success()
+  +alert-error()
+
+  div(class='products')
+    div(class='container')  
+      div(class='content')
+        div(class='title') Sản phẩm nổi bật
+        div(class='description') Những sản phẩm được yêu thích nhất
+      +grid-product(productsFeatured)
+      a(class='btn btn-all-product') Xem toàn bộ sản phẩm
+
+  div(class='products' style='background: white')
+    div(class='container')  
+      div(class='content')
+        div(class='title') Sản phẩm mới
+        div(class='description') Khám phá những sản phẩm mới nhất của chúng tôi
+      +grid-product(productsNew)
+
+      
+
+  

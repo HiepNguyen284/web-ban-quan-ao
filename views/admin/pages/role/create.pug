@@ -1,0 +1,16 @@
+extend ../../layouts/default.pug
+
+block main 
+  if role.permissions.includes('role_create')
+    h1.titlePage Thêm chức vụ
+    form(action='/admin/roles/create' method='POST' class='row')
+      div(class='mb-3 col-12')
+        label(for='name' class="form-label") Tên chức vụ
+        input(type='text' id='name' name='name' class="form-control")
+      div(class='mb-3 col-12')
+        label(for='description' class="form-label") Mô tả
+        input(type='text' id='description' name='description' class="form-control")
+      div(class='mb-3 col-12')
+        button(type='submit' class='btn btn-primary' style='margin: 0') Thêm mới
+  else 
+    h1.titlePage Bạn không có quyền thêm chức vụ

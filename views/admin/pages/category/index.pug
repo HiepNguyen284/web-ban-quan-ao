@@ -1,0 +1,44 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+include ../../mixins/table-category.pug
+
+block main 
+  +alert-success()
+  +alert-error()
+
+  if role.permissions.includes('category_view')
+    h1.titlePage Quản lý danh mục
+
+    div(class='d-flex justify-content-end')
+      a(href='/admin/categories/create' class='btn btn-primary mb-3') + Thêm mới danh mục
+
+    .card 
+      .card-header 
+        div(class='products-header')
+          div
+
+          <h5 class="text-primary" style='font-weight: bold'>Danh sách danh mục</h5>
+
+          form(class='search-products input-group' style='max-width: 250px')
+            input.form-control(type='text', name='keyword' id='keyword', placeholder='Nhập tên danh mục' input-search)
+            button(class='btn btn-primary' type='submit')
+              i(class='fa-solid fa-magnifying-glass')
+
+      .card-body 
+        table 
+          thead
+            tr 
+              th STT 
+              th Hình ảnh
+              th Tên danh mục
+              th Danh mục cha
+              th Trạng thái 
+              th Thao tác
+          tbody 
+            +tableCategory(categories, 1)
+    form(action=`` method='POST' form-delete-category)
+
+  else 
+    h1.titlePage Bạn không có quyền xem danh mục
+
+  script(src='/js/category.js')

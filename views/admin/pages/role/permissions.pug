@@ -1,0 +1,53 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+include ../../mixins/permissions.pug
+
+block main 
+  - const categories = [{title: 'Xem', value: 'category_view'}, {title: 'Thêm mới', value: 'category_create'}, {title: 'Chỉnh sửa', value: 'category_edit'}, {title: 'Xóa', value: 'category_delete'}]
+
+  - const products = [{title: 'Xem', value: 'product_view'}, {title: 'Thêm mới', value: 'product_create'}, {title: 'Chỉnh sửa', value: 'product_edit'}, {title: 'Xóa', value: 'product_delete'}]
+
+  - const orders = [{title: 'Xem', value: 'order_view'}, {title: 'Cập nhật trạng thái', value: 'order_edit'}]
+
+  - const clients = [{title: 'Xem', value: 'client_view'}, {title: 'Xóa', value: 'client_delete'}]
+
+  - const staffs = [{title: 'Xem', value: 'staff_view'}, {title: 'Cập nhật chức vụ', value: 'staff_edit'}, {title: 'Xóa', value: 'staff_delete'}]
+
+  - const chucVu = [{title: 'Xem', value: 'role_view'}, {title: 'Thêm mới', value: 'role_create'}, {title: 'Chỉnh sửa', value: 'role_edit'}, {title: 'Xóa', value: 'role_delete'}, {title: 'Phân quyền', value: 'role_permissions'}]
+  
+  - const contacts = [{title: 'Xem', value: 'contact_view'}, {title: 'Xóa', value: 'contact_delete'}, {title: 'Chỉnh sửa', value: 'contact_edit'}]
+
+  +alert-success()
+
+  if role.permissions.includes('role_permissions')
+    h1.titlePage Phân quyền
+    div(class="d-flex justify-content-end mb-3")
+      button(class='btn btn-primary' btn-edit-permissions) Cập nhật
+    table(table-permissions)
+      thead 
+        tr 
+          th(style='width: 200px') Tính năng 
+          each role in roles 
+            th #{role.name}
+      tbody 
+        tr(data-name='id' style='display: none')
+          td
+          each role in roles 
+            td 
+              input(type='text' value=role.id role-id)
+        +permissions('Danh mục sản phẩm', categories, roles)
+        +permissions('Sản phẩm', products, roles)
+        +permissions('Đơn hàng', orders, roles)
+        +permissions('Liên hệ', contacts, roles)
+        +permissions('Quản lý khách hàng', clients, roles)
+        +permissions('Quản lý nhân viên', staffs, roles)
+        +permissions('Chức vụ', chucVu, roles)
+
+    form(action='/admin/roles/edit-permissions?_method=PATCH' method='POST' form-edit-permissions class='hidden')
+      div(class='mb-3')
+        input(type='text' name='permissions' class='form-control' input-edit-permissions)
+  else 
+    h1.titlePage Bạn không có quyền chỉnh sửa quyền
+
+  script(src='/js/role.js')
+        

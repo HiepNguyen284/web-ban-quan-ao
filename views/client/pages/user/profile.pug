@@ -1,0 +1,36 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main 
+  +alert-success()
+  +alert-error()
+
+  div(class="profile-container")
+    div(class="profile-sidebar")
+      a(class="profile-link profile-active", href="#") Thông tin cá nhân
+      a(class="profile-link profile", href="/orders/list-order") Đơn hàng
+      a(class="profile-link profile", href="/orders/history-order") Lịch sử mua hàng
+      a(class="profile-link", href="/users/logout") Đăng xuất
+
+    div(class="profile-content")
+      h2 Thông tin cá nhân
+      p Quản lý thông tin cá nhân
+
+      form(action=`/users/edit/${user.id}?_method=PATCH`, method="POST")
+        div(class="mb-3")
+          label(for="email" class='form-label') Email
+          input(id="email", type="email", name="email", value=user.email class='form-control' readonly)
+
+        div(class="mb-3")
+          label(for="fullName" class='form-label') Họ tên
+          input(id="fullName", type="text", name="fullName", value=user.fullName class='form-control')
+
+        div(class="mb-3")
+          label(for="phone" class='form-label') Số điện thoại
+          input(id="phone", type="text", name="phone", value=user.phone class='form-control')
+
+        div(class="mb-3")
+          label(for="address" class='form-label') Địa chỉ
+          input(id="address", type="text", name="address", value=user.address class='form-control')
+
+        button(type="submit", class="profile-btn-save") LƯU THÔNG TIN

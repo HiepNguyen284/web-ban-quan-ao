@@ -1,0 +1,140 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main
+  +alert-success()
+  +alert-error()
+
+  if role.name === 'Chủ cửa hàng'
+    div(class="container-fluid")
+      h1.titlePage Trang tổng quan
+      div(class="row mb-4")
+        div(class="col-md-3")
+          div(class="card shadow-sm p-3")
+            div(class="d-flex justify-content-between align-items-center")
+              div(class="text")
+                p TỔNG SỐ SẢN PHẨM
+                h4(class="mb-0") #{products.length}
+              i(class="fas fa-tshirt fa-2x")
+
+        div(class="col-md-3")
+          div(class="card shadow-sm p-3 border-success-custom")
+            div(class="d-flex justify-content-between align-items-center")
+              div(class="text")
+                p TỔNG SỐ DANH MỤC
+                h4(class="mb-0") #{categories.length}
+              i(class="fas fa-folder fa-2x")
+
+        div(class="col-md-3")
+          div(class="card shadow-sm p-3 border-primary-custom")
+            div(class="d-flex justify-content-between align-items-center")
+              div(class="text")
+                p TỔNG ĐƠN HÀNG
+                h4(class="mb-0") #{orders.length}
+              i(class="fas fa-shopping-cart fa-2x")
+
+        div(class="col-md-3")
+          div(class="card shadow-sm p-3 border-warning-custom")
+            div(class="d-flex justify-content-between align-items-center")
+              div(class="text")
+                p TỔNG DOANH THU
+                h4(class="mb-0") #{revenue.toLocaleString()}
+              i(class="fas fa-dollar-sign fa-2x")
+
+      //- div(class="row")
+      //-   div(class="col-md-12 mb-4")
+      //-     div(class="card shadow-sm")
+      //-       div(class="card-header bg-white fw-bold") Tổng quan doanh thu
+      //-       div(class="card-body chart-placeholder")
+      //-         canvas(id="revenueChart" width="400" height="150" value=revenueData)
+
+      div(class="row")
+        div(class="col-md-6 mb-4")
+          div(class="card shadow-sm")
+            div(class="card-header bg-white fw-bold") Sản phẩm bán chạy
+            table(class="table table-striped mb-0")
+              thead
+                tr
+                  th Tên sản phẩm
+                  th Danh mục
+                  th Đã bán
+              tbody
+                each product in listProductSold
+                  tr
+                    td #{product.name}
+                    td #{product.nameCategory}
+                    td #{product.sold}
+            div(class="card-footer bg-white text-end")
+              a(href='/admin/products' class="btn btn-primary btn-sm") Xem tất cả
+        
+        div(class="col-md-6 mb-4")
+          div(class="card shadow-sm")
+            div(class="card-header bg-white fw-bold") TOP khách hàng
+            table(class="table table-striped mb-0")
+              thead
+                tr
+                  th Tên khách hàng
+                  th Tổng số đơn
+                  th Tổng chi tiêu
+              tbody
+                each user in users
+                  tr
+                    td #{user.fullName}
+                    td #{user.totalOrders}
+                    td #{user.totalSpend}
+            div(class="card-footer bg-white text-end")
+              a(href='/admin/clients' class="btn btn-primary btn-sm") Xem tất cả
+
+        div(class="col-md-6 mb-4")
+          div(class="card shadow-sm")
+            div(class="card-header bg-white fw-bold") Sản phẩm mới nhất
+            table(class="table table-striped mb-0")
+              thead
+                tr
+                  th Tên sản phẩm
+                  th Danh mục
+                  th Giá
+              tbody
+                each product in listProductNew
+                  tr
+                    td #{product.name}
+                    td #{product.nameCategory}
+                    td #{product.price}
+            div(class="card-footer bg-white text-end")
+              a(href='/admin/products' class="btn btn-primary btn-sm") Xem tất cả
+
+        div(class="col-md-6 mb-4")
+          div(class="card shadow-sm")
+            div(class="card-header bg-white fw-bold") Đơn hàng gần đây
+            table(class="table table-striped mb-0")
+              thead
+                tr
+                  th Khách hàng
+                  th Số sản phẩm
+                  th Tổng tiền
+                  th Trạng thái
+              tbody
+                each order in listOrderRecently
+                  tr
+                    td #{order.userInfo.fullName}
+                    td #{order.products.length}
+                    td #{order.totalAmount.toLocaleString()}đ
+                    td
+                      if order.status === 'pending'
+                        span.badge.bg-warning Chờ xác nhận 
+                      else if order.status === 'process'
+                        span.badge.bg-warning Đang chuẩn bị hàng 
+                      else if order.status === 'shipping'
+                        span.badge.bg-warning Đang giao 
+                      else if order.status === 'complete'
+                        span.badge.bg-success Hoàn thành
+                      else if order.status === 'cancel'
+                        span.badge.bd-danger Đã hủy
+            div(class="card-footer bg-white text-end")
+              a(href='/admin/orders' class="btn btn-primary btn-sm") Xem tất cả
+  else 
+    h1.titlePage Chủ cửa hàng mới có quyền xem
+
+  
+  script(src="https://cdn.jsdelivr.net/npm/chart.js")
+  script(src='/js/dashboard.js')

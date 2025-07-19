@@ -1,0 +1,57 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main 
+  +alert-success()
+  +alert-error()
+
+  if role.permissions.includes('client_view')
+    h1.titlePage Quản lý khách hàng
+
+    .card 
+      .card-header 
+        div(class='products-header')
+          div
+            select(class='form-select')
+              option(value='10') 10 khách hàng
+              option(value='20') 20 khách hàng
+              option(value='50') 50 khách hàng
+              option(value='all') Tất cả
+
+          <h5 class="text-primary" style='font-weight: bold'>Danh sách khách hàng</h5>
+
+          div(class='search-products input-group' style='max-width: 250px')
+            input.form-control(type='text', name='searchName' id='searchName', placeholder='Nhập tên khách hàng' input-search)
+            button(class='btn btn-primary' type='button')
+              i(class='fa-solid fa-magnifying-glass')
+
+      .card-body 
+        table 
+          thead
+            tr 
+              th STT 
+              th Tên khách hàng
+              th Số đơn hàng đã đặt
+              th Số đơn hàng đang giao
+              th Tổng chi tiêu
+              th Thao tác
+          tbody 
+            each user, index in users 
+              tr 
+                td #{index+1}
+                td #{user.fullName}
+                td #{user.totalOrders}
+                td #{user.shippingOrders}
+                td #{user.totalSpend.toLocaleString()}đ
+                td 
+                  a(btn-info-client class='btn btn-secondary' tokenUser=user.tokenUser user_id=user.id)
+                    i(class='fa-solid fa-eye') 
+                  a(class='btn btn-danger' onclick=`confirmDelete('${user.id}')`)
+                    i(class="fa-solid fa-trash")
+            
+    form(action=`` method='POST' form-delete-client)
+
+  else 
+    h1.titlePage Bạn không có quyền quản lý khách hàng
+
+  script(src='/js/client.js')

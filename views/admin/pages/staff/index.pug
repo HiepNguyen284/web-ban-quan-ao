@@ -1,0 +1,82 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main 
+  +alert-success()
+  +alert-error()
+
+  if role.permissions.includes('staff_view')
+    h1.titlePage Quản lý nhân viên
+
+    .card 
+      .card-header 
+        div(class='products-header')
+          div
+            select(class='form-select')
+              option(value='10') 10 nhân viên
+              option(value='20') 20 nhân viên
+              option(value='50') 50 nhân viên
+              option(value='all') Tất cả
+
+          <h5 class="text-primary" style='font-weight: bold'>Danh sách nhân viên</h5>
+
+          div(class='search-products input-group' style='max-width: 250px')
+            input.form-control(type='text', name='searchName' id='searchName', placeholder='Nhập tên nhân viên' input-search)
+            button(class='btn btn-primary' type='button')
+              i(class='fa-solid fa-magnifying-glass')
+
+      .card-body 
+        table 
+          thead
+            tr 
+              th STT 
+              th Tên nhân viên
+              th Số điện thoại
+              th Chức vụ
+              th Trạng thái
+              th Thao tác
+          tbody 
+            each staff, index in staffs 
+              tr 
+                td #{index+1}
+                td #{staff.fullName}
+                td #{staff.phone}
+                td 
+                  select(
+                    name='role_id' 
+                    class='form-select' 
+                    style='width: 200px; margin-left: auto; margin-right: auto' 
+                    onchange=`changeRole('${staff.id}', '${staff.fullName}', '${staff.role_id}')` 
+                    select-change-role 
+                    data-id=`${staff.id}`
+                  )
+                    each role in roles 
+                      option(
+                        value=role.id 
+                        selected=(staff.role_id === role.id) 
+                        style='text-align: center'
+                      ) #{role.name}
+                td
+                  if !staff.status
+                    span.badge.bg-danger.text-white Chờ duyệt
+                    a.btn.btn-success.btn-sm.ms-2(title='Duyệt' onclick=`approveAccount('${staff.id}')`)
+                      i.fa-solid.fa-check
+                    a.btn.btn-danger.btn-sm.ms-1(title='Từ chối' onclick=`rejectAccount('${staff.id}')`)
+                      i.fa-solid.fa-xmark
+                  else
+                    span.badge.bg-success Đã duyệt
+                td 
+                  a(href=`/admin/staffs/detail/${staff.id}` btn-info-staff class='btn btn-secondary' staff_id=staff.id)
+                    i(class='fa-solid fa-eye') 
+                  a(class='btn btn-danger' onclick=`confirmDelete('${staff.id}')`)
+                    i(class="fa-solid fa-trash")
+            
+    form(action=`` method='POST' form-delete-staff)
+    form(action='' method='POST' form-change-role)
+    form(action='' method='POST' form-change-status)
+
+  else 
+    h1.titlePage Bạn không có quyền quản lý nhân viên
+
+  script(src='/js/staff.js')
+

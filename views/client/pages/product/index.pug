@@ -1,0 +1,11 @@
+extends ../../layouts/product.pug
+include ../../mixins/grid-product.pug
+
+block main 
+  if products.length > 0
+    div(class='products' style='background: white')
+      div(class='container')  
+        +grid-product(products)
+  else 
+    div(class='main')
+      h1(class='titlePage') Không tìm thấy sản phẩm

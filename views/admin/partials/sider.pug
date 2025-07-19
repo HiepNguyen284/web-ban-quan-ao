@@ -1,0 +1,41 @@
+.sider 
+  .menu 
+    if account
+      ul 
+        if role.name === 'Chủ cửa hàng'
+          li
+            a(href='/admin/dashboard') Tổng quan
+        if role.permissions.includes('product_view')
+          li 
+            a(href='/admin/products') Sản phẩm
+        if role.permissions.includes('category_view')
+          li 
+            a(href='/admin/categories') Danh mục
+        if role.permissions.includes('order_view')
+          li 
+            a(href='/admin/orders') Đơn hàng
+        if role.permissions.includes('contact_view')
+          li 
+            a(href='/admin/contacts') Liên hệ
+        if role.permissions.includes('client_view')
+          li
+            a(href='/admin/clients') Khách hàng 
+        if role.permissions.includes('staff_view')
+          li 
+            a(href='/admin/staffs') Nhân viên
+        if role.permissions.includes('role_view')
+          li
+            a(href='/admin/roles') Chức vụ
+        if role.permissions.includes('role_permissions')
+          li 
+            a(href='/admin/roles/permissions') Phân quyền
+  .info   
+    if account
+      p
+        | Xin chào, 
+        a(href=`/admin/staffs/detail/${account.id}`) #{account.fullName}
+      a(href='/admin/account/logout') Đăng xuất
+    else
+      a(href='/admin/account/login') Đăng nhập
+
+  script(src='/js/sider.js')

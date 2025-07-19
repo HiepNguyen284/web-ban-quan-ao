@@ -1,0 +1,25 @@
+mixin grid-product(products)
+  div(class='row')
+    each product in products
+        div(class='product')
+          a(href=`/products/detail/${product.slug}`)
+            div(class='product-image')
+              img(src=product.thumbnail, alt=product.name)
+              if product.discount
+                div(class='discount-label') #{product.discount}%
+              if product.isNew 
+                div(class='new-label') NEW
+              else if product.featured 
+                div(class='new-label') Nổi bật
+
+            div(class='product-content')
+              div(class='product-name') #{product.name}
+
+              div(class='product-price')
+                if product.discount !== 0
+                  span(class='new-price') #{product.newPrice.toLocaleString()}₫
+                  span(class='old-price') #{product.price.toLocaleString()}₫
+                else
+                  span(class='new-price') #{product.price.toLocaleString()}₫
+
+              a(href=`/products/detail/${product.slug}` class='product-detail btn btn-primary') XEM CHI TIẾT

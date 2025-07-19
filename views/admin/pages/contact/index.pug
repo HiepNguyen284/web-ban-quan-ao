@@ -1,0 +1,64 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main 
+  +alert-success()
+  +alert-error()
+
+  if role.permissions.includes('contact_view')
+    h1.titlePage Quản lý liên hệ
+
+    .card 
+      .card-header 
+        div(class='products-header')
+          div
+            select(class='form-select')
+              option(value='10') 10 liên hệ
+              option(value='20') 20 liên hệ
+              option(value='50') 50 liên hệ
+              option(value='all') Tất cả
+
+          <h5 class="text-primary" style='font-weight: bold'>Danh sách liên hệ</h5>
+
+          div(class='search-products input-group' style='max-width: 250px')
+            input.form-control(type='text', name='searchName' id='searchName', placeholder='Nhập tên khách hàng' input-search)
+            button(class='btn btn-primary' type='button')
+              i(class='fa-solid fa-magnifying-glass')
+
+      .card-body 
+        table 
+          thead
+            tr 
+              th STT 
+              th Tên khách hàng
+              th Số điện thoại
+              th Email
+              th Tiêu đề
+              th Trạng thái
+              th Thao tác
+          tbody 
+            each contact, index in contacts 
+              tr 
+                td #{index+1}
+                td #{contact.name}
+                td #{contact.phone}
+                td #{contact.email}
+                td #{contact.title}
+                td 
+                  if contact.status
+                    span.badge.bg-success Đã xử lý
+                  else
+                    span(class='badge bg-danger text-white' style='cursor: pointer' onclick=`confirmEditStatus('${contact.id}')`) Chưa xử lý
+                td 
+                  a(href=`/admin/contacts/detail/${contact.id}` class='btn btn-secondary')
+                    i(class='fa-solid fa-eye') 
+                  a(class='btn btn-danger' onclick=`confirmDelete('${contact.id}')`)
+                    i(class="fa-solid fa-trash")
+            
+    form(action=`` method='POST' form-delete-contact)
+    form(action=`` method='POST' form-edit-status-contact)
+
+  else 
+    h1.titlePage Bạn không có quyền quản lý liên hệ
+
+  script(src='/js/contact.js')

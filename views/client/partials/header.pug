@@ -1,0 +1,36 @@
+div(class="client-header")
+  div(class="header-top")
+    div(class="logo")
+      a(href='/' style='color: #f14e60') LOGO
+    div(class="search-bar" form-search-products)
+      input(type="text" name='keyword' placeholder="Tìm kiếm sản phẩm..." input-search-products input-search)
+      button(type='submit' btn-search-products)
+        i(class="fas fa-search")
+    div(class="header-icons")
+      if user 
+        a(href='/carts' style='font-weight: bold; color: #f14e60; margin-right: 20px')
+          i(class="fas fa-shopping-cart" style='font-size:25px')
+          span.cart-count (#{totalProduct})
+        a(href=`/users/profile/${user.id}` style='font-weight: bold; color: #f14e60')
+          i(class="fa-solid fa-user" style='font-size:25px')
+      else 
+        a(href='/users/login' style='font-weight: bold; color: #f14e60; margin-right: 20px; font-size: 17px') Đăng nhập 
+        a(href='/users/register' style='font-weight: bold; color: #f14e60; font-size: 17px') Đăng ký
+  nav(class="main-nav")
+    ul
+      li
+        a(href="/") Trang chủ
+      li
+        a(href="/products") Sản phẩm
+      li
+        a(href="/products?option=Nam") Nam
+      li
+        a(href="/products?option=Nữ") Nữ
+      li
+        a(href="/products?option=Trẻ em") Trẻ em
+      li
+        a(href="/products?option=sale") Sale
+      li
+        a(href="/contact") Liên hệ
+
+script(src='/js/header.js')

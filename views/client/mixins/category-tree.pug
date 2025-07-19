@@ -1,0 +1,7 @@
+mixin categoryTree(categories, parent_id, level)
+  each category in categories 
+    li(class=category.children && category.children.length > 0 ? 'has-children' : '', value=category.id)
+      span(class='category-name' slug=category.slug) #{category.name}
+      if category.children && category.children.length > 0
+        ul(class='sub-menu')
+          +categoryTree(category.children, parent_id, level+1)

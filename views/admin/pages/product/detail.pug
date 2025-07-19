@@ -1,0 +1,68 @@
+extends ../../layouts/default.pug
+
+block main
+
+  if role.permissions.includes('product_view')
+    div(class='product-detail')
+      h1.titlePage Thông tin chi tiết sản phẩm
+
+      div(class='row')
+        div(class='col-md-4')
+          div(class='thumbnail-wrapper')
+            img(src=product.thumbnail alt=product.name class='thumbnail-img')
+
+        div(class='col-md-8')
+          div(class='info-table')
+            div(class='info-row')
+              div(class='info-label') Tên sản phẩm
+              div(class='info-value') #{product.name}
+            div(class='info-row')
+              div(class='info-label') Danh mục
+              div(class='info-value') #{product.category}
+            div(class='info-row')
+              div(class='info-label') Giá gốc
+              div(class='info-value') #{product.price.toLocaleString()}₫
+            div(class='info-row')
+              div(class='info-label') Giảm giá
+              div(class='info-value') #{product.discount}%
+            div(class='info-row')
+              div(class='info-label') Trạng thái
+              div(class='info-value')
+                if product.status == 'active'
+                  span(class='status-badge active') Hoạt động
+                else 
+                  span(class='status-badge inactive') Dừng hoạt động
+            div(class='info-row')
+              div(class='info-label') Nổi bật
+              div(class='info-value')
+                if product.featured
+                  span(class='status-badge featured') Có
+                else 
+                  span(class='status-badge not-featured') Không
+
+      h5(class='mt-4') Kích cỡ & tồn kho
+      div(class='size-table-wrapper')
+        table(class='size-table')
+          thead
+            tr
+              th Size
+              th Số lượng
+          tbody
+            each item in product.sizes
+              tr
+                td 
+                  strong #{item.size}
+                td 
+                  if item.stock > 0
+                    strong #{item.stock}
+                  else
+                    span(class='out-of-stock') Hết hàng
+
+      h5(class='mt-4') Mô tả chi tiết
+      div(class='description-box')
+        div(class='product-description') !{product.description}
+
+      a(href='/admin/products' class='btn btn-secondary mt-4') ← Quay lại danh sách
+      a(href=`/admin/products/edit/${product.id}` class='btn btn-primary mt-4 ml-20') Chỉnh sửa sản phẩm
+  else 
+    h1.titlePage Bạn không có quyền xem chi tiết sản phẩm

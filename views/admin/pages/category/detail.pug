@@ -1,0 +1,52 @@
+extends ../../layouts/default.pug
+
+block main
+
+  if role.permissions.includes('category_view')
+    h1.titlePage Chi tiết danh mục
+    .card-body
+      dl.category-detail
+        .row-item
+          dt Tên danh mục:
+          dd #{category.name}
+
+        .row-item
+          dt Slug:
+          dd #{category.slug}
+
+        .row-item
+          dt Mô tả:
+          dd !{category.description}
+
+        .row-item
+          dt Giới tính:
+          dd #{category.gender}
+
+        .row-item
+          dt Trạng thái:
+          dd 
+            if category.status == 'active'
+              span.status-badge.active Hoạt động
+            else 
+              span.status-badge.inactive Dừng hoạt động
+
+        .row-item
+          dt Đã xóa:
+          dd #{category.deleted === 'true' ? 'Đã xóa' : 'Còn tồn tại'}
+
+        .row-item
+          dt Danh mục cha:
+          dd #{category.nameCategoryParent || 'Danh mục gốc'}
+
+        if category.thumbnail
+          .row-item
+            dt Ảnh đại diện:
+            dd 
+              img(src=category.thumbnail, alt=category.name, style="max-width: 200px; border-radius: 8px;")
+
+      a(href="/admin/categories" class='btn btn-primary') Quay lại danh sách
+      a(href=`/admin/categories/edit/${category.id}` class='btn btn-warning ml-20') Chỉnh sửa
+  
+  else 
+    h1.titlePage Bạn không có quyền xem chi tiết danh mục
+

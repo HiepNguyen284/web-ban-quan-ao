@@ -1,0 +1,51 @@
+extend ../../layouts/default.pug
+include ../../mixins/alert.pug
+include ../../mixins/select-category.pug
+
+block main 
+  +alert-success()
+  +alert-error()
+
+  if role.permissions.includes('category_edit')
+    h1.titlePage Thêm mới danh mục
+    form(action=`/admin/categories/edit/${category.id}` method='POST' enctype='multipart/form-data')
+      div(class='container mt-4')
+        div(class='mb-3')
+          label(class='form-label' for='name') Tên danh mục
+          input(class='form-control' type='text' id='name' name='name' value=category.name)
+        
+        div(class='mb-3')
+          label(class='form-label' for='thumbnail') Ảnh đại diện
+          input(class='form-control' type='file' id='thumbnail' name='thumbnail' accept='image/*')
+          img(src=category.thumbnail id='imgThumbnail' name='imgThumbnail' class=`${category.thumbnail ? '' : 'd-none'}`)
+
+        div(class='row')
+          div(class='col-md-3 mb-3')
+            label(class='form-label' for='parent_id') Danh mục cha
+            select(class='form-select select' id='parent_id' name='parent_id')
+              option(value='') -- Chọn danh mục  cha --
+              +selectCategory(categories, category.parent_id, 1)
+          
+          div(class='col-md-2 mb-3')
+            label(class='form-label' for='gender') Giới tính
+            select(class='form-select' id='gender' name='gender')
+              option(value='') -- Chọn giới tính --
+              option(value='Nam' selected=(category.gender === 'Nam')) Nam
+              option(value='Nữ' selected=(category.gender === 'Nữ')) Nữ
+              option(value='Trẻ em' selected=(category.gender === 'Trẻ em')) Trẻ em
+          
+          div(class='col-md-2 mb-3')
+            label(class='form-label' for='status') Trạng thái
+            select(class='form-select' id='status' name='status')
+              option(value='active' selected=(category.status === 'active')) Hoạt động
+              option(value='inactive' selected=(category.status === 'inactive')) Dừng hoạt động
+
+        div(class='mb-3')
+          label(class='form-label' for='description') Mô tả
+          textarea(class='form-control' id='description' name='description' rows='2') !{category.description}
+
+        div(class='d-flex justify-content-center')
+          button(class='btn btn-primary' type='submit') Cập nhật danh mục
+  
+  else 
+    h1.titlePage Bạn không có quyền chỉnh sửa danh mục

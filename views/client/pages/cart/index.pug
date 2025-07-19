@@ -1,0 +1,102 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main 
+  +alert-success()
+  +alert-error()
+
+  div(class='container' style='margin-bottom: 40px')
+    h1.titlePage Giỏ hàng của bạn
+
+    if products.length === 0
+      .empty-cart
+        i(class="fas fa-shopping-cart" style='font-size: 75px')
+        h2 Giỏ hàng của bạn đang trống
+        p Hãy thêm sản phẩm vào giỏ hàng để tiếp tục mua sắm
+        a(href='/products' class='btn btn-pink' style='width: 200px') Tiếp tục mua hàng
+
+    else 
+      
+      div(class='row')
+        div(class='col-8')
+          table 
+            thead 
+              tr 
+                th
+                  input(type='checkbox' style='transform: scale(1.5)' checkout-all-product)
+                th Hình ảnh 
+                th Tên sản phẩm 
+                th Size 
+                th Số lượng 
+                th Tổng tiền 
+                th Thao tác
+            tbody
+              each product in products 
+                tr 
+                  td 
+                    input(type='checkbox' style='transform: scale(1.5)' checkout-product product_id=product.product_id size=product.size checked=(product.checkout))
+
+                  td
+                    img(src=product.detail.thumbnail alt=product.detail.name)
+
+                  td #{product.detail.name}
+
+                  td 
+                    select(name='size' class='form-control' change-size-product product_id=product.product_id)
+                      each object in product.detail.sizes 
+                        option(value=object.size selected=(object.size === product.size)) #{object.size}
+
+                  td 
+                    div(class='product-detail-quantity my-3')
+                      button(type='button' class='btn btn-outline-secondary btn-sm mx-2 btn-sub' id_and_size = `${product.product_id}-${product.size}`) -
+
+                      input(type='number' min=1 max=product.detail.stock value=product.quantity style='width: 60px; text-align: center;' readonly class=`quantity-product-${product.product_id}-${product.size}` name='quantity' price=product.detail.newPrice id_and_size = `${product.product_id}-${product.size}`)
+
+                      button(type='button' class='btn btn-outline-secondary btn-sm mx-2 btn-plus' id_and_size = `${product.product_id}-${product.size}`) +
+
+                  td(class=`total-price-${product.product_id}-${product.size}`) #{(product.quantity * product.detail.newPrice).toLocaleString()}đ
+
+                  td 
+                    //- a(href=`/products/detail/${product.detail.slug}` class='btn btn-warning' style='padding: 13px') 
+                    //-   i(class="fa-solid fa-pen-to-square")
+                    a(class='btn btn-danger' style='padding: 13px' btn-delete-product-in-cart product_id = `${product.product_id}` size=product.size) 
+                      i(class="fa-solid fa-trash")
+
+        div(class='col-4')
+          div(class='card')
+            div(class='card-header') Chi tiết đơn hàng
+            div(class='card-body')
+              div(class='detail-order')
+                - var totalOrder = 0
+                each product in products 
+                  if product.checkout === true 
+                    div(class='list-product-in-order')
+                      p 
+                        strong Tên: 
+                        | #{product.detail.name} - #{product.size}
+                      p 
+                        strong Số lượng: 
+                        | #{product.quantity}
+                      p 
+                        strong Tổng tiền: 
+                        | #{(product.detail.newPrice * product.quantity).toLocaleString()}đ
+                      - totalOrder += product.detail.newPrice * product.quantity
+                div(class='total-order') 
+                  p(style='color: #ff4081; font-size: 20px; font-weight: bold') Thành tiền: #{totalOrder.toLocaleString()}đ
+                div(class='checkout-order')
+                  a(href='/orders' class='btn btn-pink' style='margin-top: 10px') 
+                    strong ĐẶT HÀNG
+
+
+
+
+    
+  form(action='/carts/delete?_method=DELETE' method='POST' form-delete-product-in-cart) 
+    input(type='text' name='product_id' class='d-none' input-product_id) 
+    input(type='text' name='size' class='d-none' input-size)
+
+  form(action='' method='POST' form-edit-product-in-cart)
+
+  script(src='/js/cart.js')
+
+

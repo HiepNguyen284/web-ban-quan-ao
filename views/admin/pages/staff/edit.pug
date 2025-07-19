@@ -1,0 +1,32 @@
+extends ../../layouts/default.pug
+
+block main
+  div(class="container mt-5")
+    div(class="row justify-content-center")
+      div(class="col-md-8")
+        div(class="card shadow")
+          div(class="card-body p-5")
+            h2(class="mb-3 text-danger fw-bold text-center") Chỉnh sửa thông tin
+
+            form(action=`/admin/staffs/edit/${account.id}?_method=PATCH` method="POST")
+              div(class="mb-3")
+                label(for="fullName" class="form-label fw-semibold") Họ tên
+                input(type="text" class="form-control border-0 bg-light" id="fullName" name="fullName" value=account.fullName)
+
+              div(class="mb-3")
+                label(for="role" class="form-label fw-semibold") Chức vụ
+                input(type="text" class="form-control border-0 bg-light" id="role" name="role" value=account.role_name readonly)
+
+              div(class="mb-3")
+                label(for="email" class="form-label fw-semibold") Email
+                input(type="email" class="form-control border-0 bg-light" id="email" name="email" value=account.email)
+
+              div(class="mb-3")
+                label(for="phone" class="form-label fw-semibold") Số điện thoại
+                input(type="text" class="form-control border-0 bg-light" id="phone" name="phone" value=account.phone)
+
+              div(class="mb-4")
+                label(for="address" class="form-label fw-semibold") Địa chỉ
+                input(type="text" class="form-control border-0 bg-light" id="address" name="address" value=account.address)
+
+              button(type='submit' class='btn btn-pink') Lưu thông tin

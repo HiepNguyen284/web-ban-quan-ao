@@ -1,0 +1,32 @@
+extends ../../layouts/default.pug
+
+block main
+  if role.permissions.includes('contact_view')
+    div(class="container mt-5")
+      div(class="row justify-content-center")
+        div(class="col-md-8")
+          div(class="card shadow")
+            div(class="card-body p-5")
+              h2(class="mb-3 text-danger fw-bold text-center") Chi tiết liên hệ
+
+              div(class="mb-3")
+                label(for="name" class="form-label fw-semibold") Họ tên
+                input(type="text" class="form-control border-0 bg-light" id="name" name="name" value=contact.name readonly)
+
+              div(class="mb-3")
+                label(for="phone" class="form-label fw-semibold") Số điện thoại
+                input(type="text" class="form-control border-0 bg-light" id="phone" name="phone" value=contact.phone readonly)
+
+              div(class="mb-3")
+                label(for="email" class="form-label fw-semibold") Email
+                input(type="email" class="form-control border-0 bg-light" id="email" name="email" value=contact.email readonly)
+
+              div(class="mb-3")
+                label(for="title" class="form-label fw-semibold") Tiêu đề
+                input(type="text" class="form-control border-0 bg-light" id="title" name="title" value=contact.title readonly)
+
+              div(class="mb-4")
+                label(for="message" class="form-label fw-semibold") Nội dung
+                textarea(type="text" class="form-control border-0 bg-light" id="message" name="message" readonly) #{contact.message}
+  else 
+    h1.titlePage Bạn không có quyền xem thông tin nhân viên

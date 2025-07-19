@@ -1,0 +1,37 @@
+extend ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main
+  +alert-success()
+  +alert-error()
+
+  if role.permissions.includes('role_view')
+    h1.titlePage Trang chức vụ
+
+    .card 
+      .card-header Danh sách chức vụ
+      .card-body 
+        div(class="d-flex justify-content-end mb-3")
+          a(class='btn btn-primary' href='/admin/roles/create') Thêm chức vụ
+        table 
+          thead 
+            tr 
+              th STT
+              th Tên chức vụ
+              th Mô tả ngắn 
+              th Hành động
+          tbody 
+            each role, index in roles 
+              tr 
+                td #{index+1}
+                td #{role.name}
+                td #{role.description}
+                td 
+                  a(href=`/admin/roles/edit/${role.id}` class='btn btn-primary mrl-10') Chỉnh sửa
+                  a(class='btn btn-danger mrl-10' onClick=`confirmDelete('${role.id}')`) Xóa
+    
+    form(action='' method='POST' form-delete-role)
+  else 
+    h1.titlePage Bạn không có quyền xem chức vụ
+
+  script(src='/js/role.js')

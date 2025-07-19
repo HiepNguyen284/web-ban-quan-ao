@@ -1,0 +1,6 @@
+mixin selectCategory(categories, parent_id, level)
+  - const prefix = Array(level+1).join('|-- ');
+  each category in categories 
+    option(value=category.id selected=(category.id === parent_id)) #{prefix} #{category.name}
+    if category.children && category.children.length > 0
+      +selectCategory(category.children, parent_id, level+1)

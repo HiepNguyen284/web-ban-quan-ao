@@ -1,0 +1,34 @@
+mixin pagination()
+  -
+    const current = pagination.currentPage;
+    const total = pagination.totalPage;
+    const range = 3;
+    const start = Math.max(1, current - range);
+    const end = Math.min(total, current + range);
+
+  nav(style="margin-top: 20px")
+    ul(class="pagination justify-content-center")
+
+      if (current > 1)
+        li(class="page-item")
+          button(class="page-link" button-pagination=(current - 1)) Trang trước
+
+      if (start > 1)
+        li(class="page-item")
+          button(class="page-link" button-pagination=1) 1
+        li(class="page-item disabled")
+          span(class="page-link") ...
+
+      - for(let i = start; i <= end; i++)
+        li(class=`page-item ${current == i ? 'active' : ''}`)
+          button(class="page-link" button-pagination=i) #{i}
+
+      if (end < total)
+        li(class="page-item disabled")
+          span(class="page-link") ...
+        li(class="page-item")
+          button(class="page-link" button-pagination=total) #{total}
+
+      if (current < total)
+        li(class="page-item")
+          button(class="page-link" button-pagination=(current + 1)) Trang sau

@@ -1,0 +1,25 @@
+mixin tableCategory(categories, level)
+  - const prefix = Array(level).join('|-- ');
+  each category in categories 
+    tr 
+      td #{index++}
+      td 
+        if category.thumbnail
+          img(src=category.thumbnail alt=category.name)
+      td(class=`category-name level-${level-1}`) #{prefix} #{category.name}
+      td #{category.nameCategoryParent}
+      td 
+        if category.status === 'active'
+          span(class="badge bg-success") Hoạt động
+        else 
+          span(class="badge bg-danger") Dừng hoạt động
+      td 
+        a(href=`/admin/categories/detail/${category.id}` class='btn btn-secondary')
+          i(class='fa-solid fa-eye') 
+        a(href=`/admin/categories/edit/${category.id}?_method=PATCH` class='btn btn-primary')
+          i(class="fa-solid fa-pen-to-square")
+        a(class='btn btn-danger' btn-delete-category category-id=category.id onclick=`confirmDelete('${category._id}')`)
+          i(class="fa-solid fa-trash")
+
+    if category.children && category.children.length > 0
+      +tableCategory(category.children, level+1)

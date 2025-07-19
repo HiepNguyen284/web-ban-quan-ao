@@ -1,0 +1,66 @@
+extend ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main
+  +alert-success()
+  +alert-error()
+
+  h1.titlePage Xác nhận đặt hàng
+  form(action='/orders/create' form-order method='POST')
+    div(class="page-wapper")
+      div(class="order-section")
+        div(class="shipping-info")
+          h2 Thông Tin Người nhận
+          div(class="form-group")
+            input(type="text" placeholder="Họ tên" name="fullName" value=user.fullName required)
+            input(type="text" placeholder="Số điện thoại" name="phone" value=user.phone required)
+          div(class="form-group")
+            input(type="text" placeholder="Địa chỉ chi tiết" name="address" value=user.address required)
+          div(class="form-group")
+            input(type="text" placeholder="Ghi chú" name="note")
+        
+        div(class="delivery-method")
+          h2 Hình thức nhận hàng
+          div(class="delivery-method__option")
+            input(type="radio" name="deliveryMethod" id="home-delivery" checked value='Giao tận nơi')
+            label(for="home-delivery")
+              | Giao tận nơi
+          div(class="delivery-method__option")
+            input(type="radio" name="deliveryMethod" id="store-pickup" value='Nhận tại cửa hàng')
+            label(for="store-pickup")
+              | Nhận tại cửa hàng
+        
+        div(class="payment-method")
+          h2 Phương Thức Thanh Toán
+          div(class="payment-option")
+            input(type="radio" name="payment" id="cod" checked value='false')
+            label(for="cod") 
+              | Thanh toán khi nhận hàng
+          div(class="payment-option")
+            input(type="radio" name="payment" id="momo" value='true')
+            label(for="momo") 
+              | Thanh toán qua Ví Momo
+      div(class='col-4')
+        div(class='card')
+          div(class='card-header') Chi tiết đơn hàng
+          div(class='card-body')
+            div(class='detail-order')
+              - var totalOrder = 0
+              each product in products 
+                if product.checkout === true 
+                  div(class='list-product-in-order')
+                    p 
+                      strong Tên: 
+                      | #{product.detail.name} - #{product.size}
+                    p 
+                      strong Số lượng: 
+                      | #{product.quantity}
+                    p 
+                      strong Tổng tiền: 
+                      | #{(product.detail.newPrice * product.quantity).toLocaleString()}đ
+                    - totalOrder += product.detail.newPrice * product.quantity
+              div(class='total-order') 
+                p(style='color: #ff4081; font-size: 20px; font-weight: bold') Thành tiền: #{totalOrder.toLocaleString()}đ
+              div(class='checkout-order')
+                button(type='submit' class='btn btn-pink' style='margin-top: 10px') 
+                  strong ĐẶT HÀNG

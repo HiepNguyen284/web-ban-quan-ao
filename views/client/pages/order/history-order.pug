@@ -1,0 +1,83 @@
+extends ../../layouts/default.pug
+
+block main
+  h1.titlePage Lịch sử mua hàng
+  .container
+    if orders.length === 0
+      .empty-cart
+        i(class="fas fa-shopping-cart" style='font-size: 75px')
+        h2 Chưa có đơn hàng nào
+        p Hãy quay về trang sản phẩm để mua hàng
+        a(href='/products' class='btn btn-pink' style='width: 200px') Mua hàng
+
+    each order in orders
+      table.table.table-bordered
+        thead
+          tr
+            th Mã đơn
+            th Ngày đặt
+            th Tổng tiền
+            th Thanh toán
+            th Hình thức vận chuyển
+            th Trạng thái đơn hàng
+        tbody
+          tr
+            td #{order.id}
+            td #{order.createAt.toLocaleString('vi-VN')}
+            td #{order.total.toLocaleString()}đ
+            td
+              if order.payment
+                span.badge.bg-success Đã thanh toán
+              else 
+                span.badge.bg-danger Chưa thanh toán
+            td
+              span.badge.bg-info #{order.deliveryMethod}
+            td
+              if order.status === 'pending'
+                span.badge.bg-warning Chờ xác nhận 
+              else if order.status === 'process'
+                span.badge.bg-warning Đang chuẩn bị hàng 
+              else if order.status === 'shipping'
+                span.badge.bg-warning Đang giao 
+              else if order.status === 'complete'
+                span.badge.bg-success Hoàn thành
+              else if order.status === 'cancel'
+                span.badge.bd-danger Đã hủy
+          tr
+            td(colspan="6").p-0
+              .p-3
+                table.table
+                  thead
+                    tr
+                      th Sản phẩm
+                      th Kích thước
+                      th Đơn giá
+                      th Số lượng
+                      th Thành tiền
+                  tbody
+                    each product in order.products
+                      tr
+                        td 
+                          a(href=`/products/detail/${product.detail.slug}` style='color: blue') #{product.detail.name}
+                        td #{product.size}
+                        td #{product.detail.newPrice.toLocaleString()}đ
+                        td #{product.quantity}
+                        td #{(product.detail.newPrice * product.quantity).toLocaleString()}đ
+                    tfoot
+                      tr
+                        td(colspan="4").text-end Tạm tính
+                        td 
+                          if order.deliveryMethod === 'Giao tận nơi'
+                            p #{(order.total - 30000).toLocaleString()}đ
+                          else 
+                            p #{order.total.toLocaleString()}đ
+                      tr
+                        td(colspan="4").text-end Phí vận chuyển
+                        td 
+                          if order.deliveryMethod === 'Giao tận nơi'
+                            p 30.000đ
+                          else 
+                            p Miễn phí
+                      tr
+                        td(colspan="4").text-end.fw-bold Tổng cộng
+                        td.fw-bold #{order.total.toLocaleString()}đ

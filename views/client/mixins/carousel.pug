@@ -1,0 +1,37 @@
+mixin carousel()
+  div(id="heroCarousel" class="carousel slide" data-bs-ride="carousel")
+    div(class="carousel-indicators")
+      button(type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1")
+      button(type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2")
+      button(type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3")
+
+    div(class="carousel-inner")
+
+      div(class="carousel-item active")
+          div(class="hero-slide slide-sale d-flex align-items-center justify-content-center")
+            div(class="text-center")
+              h2(class="display-4 fw-bold") GIẢM GIÁ LÊN ĐẾN 50%
+              p(class="lead") Cho tất cả sản phẩm hot trong tháng
+              a(href="/products" class="btn btn-light btn-lg mt-3") KHÁM PHÁ NGAY
+
+      div(class="carousel-item")
+        div(class="hero-slide slide-summer d-flex align-items-center justify-content-center")
+          div(class="text-center")
+            h2(class="display-4 fw-bold") BỘ SƯU TẬP MÙA HÈ
+            p(class="lead") Thoải mái, mát mẻ với các thiết kế mới nhất
+            a(href="/products" class="btn btn-primary btn-lg mt-3") MUA NGAY
+      
+      div(class="carousel-item")
+        div(class="hero-slide slide-winter d-flex align-items-center justify-content-center")
+          div(class="text-center text-white")
+            h2(class="display-4 fw-bold") BỘ SƯU TẬP MÙA ĐÔNG
+            p(class="lead") Ấm áp, thời thượng cho những ngày lạnh
+            a(href="/products" class="btn btn-outline-light btn-lg mt-3") XEM NGAY
+
+    button(type="button" class="carousel-control-prev" data-bs-target="#heroCarousel" data-bs-slide="prev")
+      span(class="carousel-control-prev-icon" aria-hidden="true")
+      span(class="visually-hidden") Previous
+
+    button(type="button" class="carousel-control-next" data-bs-target="#heroCarousel" data-bs-slide="next")
+      span(class="carousel-control-next-icon" aria-hidden="true")
+      span(class="visually-hidden") Next

@@ -1,0 +1,125 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main 
+  +alert-success()
+  +alert-error()
+
+  if role.permissions.includes('order_view')
+    h1.titlePage Quản lý Đơn hàng
+
+    .filterOrder
+      form(method="GET")
+        .row
+          .col
+            label(class='form-label' for='status') Trạng thái đơn hàng
+            select(name="status" id="status" class='form-control' filter-order-status)
+              option(value="") Tất cả
+              option(value=1) Đã hoàn thành
+              option(value=0) Chưa hoàn thành
+          .col
+            label(class='form-label' for='payment') Trạng thái thanh toán
+            select(name="payment" id="payment" class='form-control' filter-order-payment)
+              option(value="") Tất cả
+              option(value=1) Đã thanh toán
+              option(value=0) Chưa thanh toán
+          .col
+            label(class='form-label' for='from_date') Từ ngày
+            input(type="date" name="from_date" id="from_date" class='form-control')
+          .col
+            label(class='form-label' for='to_date') Đến ngày
+            input(type="date" name="to_date" id="to_date" class='form-control')
+          .col
+            label(class='form-label' for='keyword') Tìm kiếm
+            input(type="text" name="keyword" placeholder="Tên KH..." id="keyword" class='form-control' input-search)
+        .row.mt-3
+          button(class='btn btn-primary' type="submit" style='width: 100px') Áp dụng
+          button(class='btn btn-secondary' type="button" style='width: 100px' reset-filter-order) Đặt lại
+
+    .orderList.mt-5
+      table.table.table-bordered
+        thead
+          tr
+            th Mã đơn
+            th Khách hàng
+            th Ngày đặt
+            th Tổng tiền
+            th Trạng thái đơn hàng
+            th Thao tác
+        tbody
+          each order in orders
+            tr
+              td #{order.id}
+              td #{order.userInfo.fullName}
+              td #{order.createAt.toLocaleString('vi-VN')}
+              td #{order.total.toLocaleString()}đ
+              td
+                - const isFinal = order.status === 'complete' || order.status === 'cancel';
+                select(name="status" class=`form-select status-select status-${order.status}` change-status-order order_id=order.id disabled=isFinal)
+                  option(value="pending" selected=(order.status === 'pending')) Chờ xác nhận
+                  option(value="process" selected=(order.status === 'process')) Đang chuẩn bị hàng
+                  option(value="shipping" selected=(order.status === 'shipping')) Đang giao
+                  option(value="complete" selected=(order.status === 'complete')) Hoàn thành
+                  option(value="cancel" selected=(order.status === 'cancel')) Đã hủy
+
+              td
+                button(class='btn btn-primary' type="button" style='margin-right: 20px' show-detail-order order_id=order.id) Xem
+
+            tr(class='d-none' id=`order-${order.id}`)
+              td(colspan="11")
+                .orderDetails.p-3.bg-light
+                  table.table 
+                    thead 
+                      tr 
+                        th Khách hàng 
+                        th Số điện thoại 
+                        th Địa chỉ
+                        th Ghi chú
+                        th Thanh toán 
+                        th Phương thức giao hàng 
+                    tbody 
+                      tr 
+                        td #{order.userInfo.fullName}
+                        td #{order.userInfo.phone}
+                        td #{order.userInfo.address}
+                        td #{order.userInfo.note}
+                        td
+                          if order.payment
+                            span.badge.bg-success Đã thanh toán
+                          else 
+                            span.badge.bg-danger Chưa thanh toán
+                        td
+                          span.badge.bg-info #{order.deliveryMethod}
+
+                  table.table
+                    thead
+                      tr
+                        th Sản phẩm
+                        th Kích thước
+                        th Đơn giá
+                        th Số lượng
+                        th Thành tiền
+                    tbody
+                      each product in order.products
+                        tr
+                          td #{product.detail.name}
+                          td #{product.size}
+                          td #{product.detail.newPrice.toLocaleString()}đ
+                          td #{product.quantity}
+                          td #{(product.detail.newPrice * product.quantity).toLocaleString()}đ
+                  .text-end.mt-2
+                    - const phi_ship = order.deliveryMethod === 'Giao tận nơi' ? '30.000đ' : 'Miễn phí'
+                    p Tạm tính: #{(order.total - (order.deliveryMethod === 'Giao tận nơi' ? 30000 : 0)).toLocaleString()}đ
+                    p Phí vận chuyển: #{phi_ship}
+                    p.fw-bold Tổng cộng: #{order.total.toLocaleString()}đ
+                  .text-end.mt-3
+                    button(class='btn btn-primary' type="button" close-detail-order order_id=order.id) Đóng
+                    button(class='btn btn-secondary' type="button") In đơn hàng
+
+    form(action='' form-change-status-order method='POST')
+
+  else 
+    h1.titlePage Bạn không có quyền xem đơn hàng
+
+  script(src='/js/order.js')
+  
